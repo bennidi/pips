@@ -4,11 +4,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {RelationStateTest.class,
-        UserRelationTest.class,
-        SocialGraphTest.class,
-        RelationStateTest.class,
-        RangeTest.class,
-        PartitionManagerTest.class})
+@Suite.SuiteClasses(value = {
+        DataCollectionTest.class,
+LaboratoryTest.class})
 public class AllTests {
 }

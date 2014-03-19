@@ -1,14 +1,13 @@
 package net.engio.graph;
 
 import net.engio.graph.common.UnitTest;
-import net.engio.imupers.performance.data.DataCollector;
-import net.engio.imupers.performance.data.IDataProcessor;
-import net.engio.imupers.performance.data.IDataSink;
-import net.engio.imupers.performance.data.filter.DataFilter;
-import net.engio.imupers.performance.reports.TimeSeriesCollector;
-import net.engio.imupers.performance.data.DataPoint;
-import net.engio.imupers.performance.data.utils.ExecutionTimer;
-import net.engio.imupers.performance.data.filter.Sampler;
+import net.engio.pips.data.DataCollector;
+import net.engio.pips.data.DataPoint;
+import net.engio.pips.data.IDataSink;
+import net.engio.pips.data.filter.IDataFilter;
+import net.engio.pips.data.filter.Sampler;
+import net.engio.pips.data.utils.ExecutionTimer;
+import net.engio.pips.reports.TimeSeriesCollector;
 import org.junit.Test;
 
 /**
@@ -53,7 +52,7 @@ public class DataCollectionTest extends UnitTest{
     @Test
     public void testSampling(){
         DataCollector<Long> timings = new DataCollector<Long>("nfnsa");
-        Sampler<Long> sampler = new Sampler<Long>(new DataFilter.TimeBased<Long>(10));
+        Sampler<Long> sampler = new Sampler<Long>(new IDataFilter.TimeBased<Long>(10));
         sampler.connectTo(timings);
         for(int i =0;i< numberOfDataItems; i++){
             sampler.receive(new DataPoint<Long>(System.currentTimeMillis()));
@@ -64,7 +63,7 @@ public class DataCollectionTest extends UnitTest{
     @Test
     public void testSamplingFrequency(){
         DataCollector<Long> timings = new DataCollector<Long>("nfnsa");
-        Sampler<Long> sampler = new Sampler<Long>(new DataFilter.TimeBased<Long>(10));
+        Sampler<Long> sampler = new Sampler<Long>(new IDataFilter.TimeBased<Long>(10));
         sampler.connectTo(timings);
         for(int i =0;i< numberOfDataItems; i++){
             sampler.receive(new DataPoint<Long>(System.currentTimeMillis()));
