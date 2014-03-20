@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * @author bennidi
  *         Date: 2/25/14
  */
-public class DataCollector<IN> implements IDataCollector<IN> {
+public class DataCollector<IN> extends DataProcessor<IN, IN> implements IDataCollector<IN> {
 
     private Set<DataPoint<IN>> datapoints = new TreeSet<DataPoint<IN>>(new Comparator<DataPoint<IN>>() {
         @Override
@@ -30,11 +30,11 @@ public class DataCollector<IN> implements IDataCollector<IN> {
     }
 
     @Override
-    public void append(IN value) {
+    public void receive(IN value) {
         receive(new DataPoint(value));
     }
 
-    public void feed(IDataSink<IN> consumer){
+    public void feed(IDataProcessor<IN,?> consumer){
         for(DataPoint dataPoint : datapoints)
             consumer.receive(dataPoint);
     }

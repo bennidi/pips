@@ -2,14 +2,13 @@ package net.engio.pips.data.aggregator;
 
 import net.engio.pips.data.DataPoint;
 import net.engio.pips.data.DataProcessor;
-import net.engio.pips.data.IDataSink;
 import net.engio.pips.data.filter.IDataFilter;
 
 /**
  * Calculate the moving aggregated by continuously aggregating a fixed number of incoming
  * data points using any given {@link IAggregate}.
  * Values are aggregated until an incoming data point passes the {@link IDataFilter}. The aggregated value
- * will then be propagated to the connected {@link IDataSink} and aggregation will be reset.
+ * will then be propagated to the connected {@link net.engio.pips.data.IDataProcessor} and aggregation will be reset.
  *
  * @author bennidi
  *         Date: 2/26/14
@@ -29,18 +28,13 @@ public class SlidingAggregator<IN, OUT> extends DataProcessor<IN, OUT>{
 
     @Override
     public void receive(DataPoint<IN> datapoint) {
-        aggregator.receive(datapoint);
+        aggregator.add(datapoint);
         if(IDataFilter.accepts(datapoint)){
             // if {range} number of datapoints have been collected
            emit(new DataPoint<OUT>(datapoint.getTsCreated(), aggregator.getValue()));
             // reset for next cycle
            aggregator.reset();
         }
-    }
-
-    @Override
-    protected void doReceive(IDataSink<OUT> sink, DataPoint<IN> datapoint) {
-        // not called because receive was overridden
     }
 
 }

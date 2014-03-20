@@ -1,4 +1,4 @@
-package net.engio.graph.common;
+package net.engio.pips;
 
 
 import org.junit.After;

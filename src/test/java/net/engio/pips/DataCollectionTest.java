@@ -1,13 +1,9 @@
-package net.engio.graph;
+package net.engio.pips;
 
-import net.engio.graph.common.UnitTest;
 import net.engio.pips.data.DataCollector;
 import net.engio.pips.data.DataPoint;
-import net.engio.pips.data.IDataSink;
 import net.engio.pips.data.filter.IDataFilter;
 import net.engio.pips.data.filter.Sampler;
-import net.engio.pips.data.utils.ExecutionTimer;
-import net.engio.pips.reports.TimeSeriesCollector;
 import org.junit.Test;
 
 /**
@@ -17,21 +13,6 @@ import org.junit.Test;
 public class DataCollectionTest extends UnitTest{
 
     private int numberOfDataItems = 100;
-
-    @Test
-    public void testTimeSeries(){
-        DataCollector<Long> timings = new DataCollector<Long>("nfnsa");
-        ExecutionTimer timer = new ExecutionTimer(timings);
-        for(int i =0;i< numberOfDataItems; i++){
-            timer.begin();
-            pause(1);
-            timer.end();
-        }
-        assertEquals(timings.size(), numberOfDataItems);
-        TimeSeriesCollector collector = new TimeSeriesCollector("whatever");
-        IDataSink series = collector.makeSeries("whatever", "whatever");
-        timings.feed(series);
-    }
 
     @Test
     public void testDataPointCollector(){
@@ -53,7 +34,7 @@ public class DataCollectionTest extends UnitTest{
     public void testSampling(){
         DataCollector<Long> timings = new DataCollector<Long>("nfnsa");
         Sampler<Long> sampler = new Sampler<Long>(new IDataFilter.TimeBased<Long>(10));
-        sampler.connectTo(timings);
+        sampler.pipeInto(timings);
         for(int i =0;i< numberOfDataItems; i++){
             sampler.receive(new DataPoint<Long>(System.currentTimeMillis()));
         }
@@ -64,7 +45,7 @@ public class DataCollectionTest extends UnitTest{
     public void testSamplingFrequency(){
         DataCollector<Long> timings = new DataCollector<Long>("nfnsa");
         Sampler<Long> sampler = new Sampler<Long>(new IDataFilter.TimeBased<Long>(10));
-        sampler.connectTo(timings);
+        sampler.pipeInto(timings);
         for(int i =0;i< numberOfDataItems; i++){
             sampler.receive(new DataPoint<Long>(System.currentTimeMillis()));
             pause(10);

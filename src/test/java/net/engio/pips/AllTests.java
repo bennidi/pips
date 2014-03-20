@@ -1,11 +1,10 @@
-package net.engio.graph;
+package net.engio.pips;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
-        DataCollectionTest.class,
-LaboratoryTest.class})
+        DataCollectionTest.class})
 public class AllTests {
 }

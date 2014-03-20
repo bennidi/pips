@@ -1,8 +1,6 @@
 package net.engio.pips.data.aggregator;
 
 import net.engio.pips.data.DataPoint;
-import net.engio.pips.data.IDataProcessor;
-import net.engio.pips.data.IDataSink;
 
 /**
  * @author bennidi
@@ -15,15 +13,11 @@ public class Average<N extends Number> implements IAggregate<N, Double> {
     private int count=0;
 
     @Override
-    public void receive(DataPoint<N> datapoint) {
+    public void add(DataPoint<N> datapoint) {
         count++;
         total += datapoint.getValue().doubleValue();
     }
 
-    @Override
-    public void append(N value) {
-        receive(new DataPoint<N>(value));
-    }
 
     @Override
     public void reset() {
@@ -36,13 +30,5 @@ public class Average<N extends Number> implements IAggregate<N, Double> {
         return total / count;
     }
 
-    @Override
-    public <V> IDataProcessor<Double, V> connectTo(IDataProcessor<Double, V> destination) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
-    @Override
-    public IDataSink<Double> connectTo(IDataSink<Double> destination) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

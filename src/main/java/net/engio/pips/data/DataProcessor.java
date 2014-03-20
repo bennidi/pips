@@ -10,39 +10,45 @@ import java.util.List;
  */
 public abstract class DataProcessor<IN, OUT> implements IDataProcessor<IN, OUT> {
 
-    private List<IDataSink<OUT>> receivers = new LinkedList<IDataSink<OUT>>();
+    private List<IDataProcessor<OUT, ?>> receivers = new LinkedList<IDataProcessor<OUT, ?>>();
 
     protected DataProcessor() {
         super();
     }
 
     @Override
-    public <V> IDataProcessor<OUT, V> connectTo(final IDataProcessor<OUT, V> consumer){
+    public <V> IDataProcessor<OUT, V> pipeInto(final IDataProcessor<OUT, V> consumer){
        receivers.add(consumer);
         return consumer;
     }
 
     @Override
-    public IDataSource<OUT> connectTo(IDataSink<OUT> destination) {
+    public DataProcessor<IN, OUT> add(IDataProcessor<OUT, ?> destination) {
         receivers.add(destination);
         return this;
     }
 
     protected void emit(DataPoint<OUT> data){
-       for(IDataSink sink : receivers)
+       for(IDataProcessor sink : receivers)
            sink.receive(data);
     }
 
+    protected List<IDataProcessor<OUT, ?>> getReceivers() {
+        return receivers;
+    }
+
+    /*
     @Override
     public void receive(DataPoint<IN> datapoint) {
-        for(IDataSink sink : receivers)
+        for(IDataProcessor sink : receivers)
             doReceive(sink, datapoint);
     }
 
-    protected abstract void doReceive(IDataSink<OUT> receiver, DataPoint<IN> datapoint);
+    protected abstract void doReceive(IDataProcessor<OUT,?> receiver, DataPoint<IN> datapoint);
+    */
 
     @Override
-    public void append(IN value) {
+    public void receive(IN value) {
         receive(new DataPoint<IN>(value));
     }
 

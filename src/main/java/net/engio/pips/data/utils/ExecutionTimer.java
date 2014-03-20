@@ -1,7 +1,7 @@
 package net.engio.pips.data.utils;
 
 import net.engio.pips.data.DataPoint;
-import net.engio.pips.data.IDataSink;
+import net.engio.pips.data.IDataProcessor;
 
 /**
  * An execution timer provides convenience methods (begin(),end()) for measuring time intervals
@@ -14,9 +14,9 @@ public class ExecutionTimer{
 
     private long begin = -1;
 
-    private IDataSink<Long> delegate;
+    private IDataProcessor<Long,?> delegate;
 
-    public ExecutionTimer(IDataSink<Long> delegate) {
+    public ExecutionTimer(IDataProcessor<Long,?> delegate) {
         this.delegate = delegate;
     }
 

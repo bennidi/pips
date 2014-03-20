@@ -1,8 +1,6 @@
 package net.engio.pips.data.aggregator;
 
 import net.engio.pips.data.DataPoint;
-import net.engio.pips.data.IDataProcessor;
-import net.engio.pips.data.IDataSink;
 
 /**
  * @author bennidi
@@ -13,7 +11,7 @@ public class Max<N extends Number> implements IAggregate<N, Double> {
     private double max=Double.MIN_VALUE;
 
     @Override
-    public void receive(DataPoint<N> datapoint) {
+    public void add(DataPoint<N> datapoint) {
         if(datapoint.getValue().doubleValue() > max)
             max = datapoint.getValue().doubleValue();
     }
@@ -21,21 +19,6 @@ public class Max<N extends Number> implements IAggregate<N, Double> {
     @Override
     public void reset() {
         max=Double.MIN_VALUE;
-    }
-
-    @Override
-    public void append(N value) {
-        receive(new DataPoint<N>(value));
-    }
-
-    @Override
-    public <V> IDataProcessor<Double, V> connectTo(IDataProcessor<Double, V> processor) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public IDataSink<Double> connectTo(IDataSink<Double> destination) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

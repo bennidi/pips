@@ -2,7 +2,7 @@ package net.engio.pips.data.utils;
 
 import net.engio.pips.data.DataCollector;
 import net.engio.pips.data.DataPoint;
-import net.engio.pips.data.IDataSink;
+import net.engio.pips.data.IDataCollector;
 import net.engio.pips.data.aggregator.IAggregate;
 
 import java.util.HashMap;
@@ -18,23 +18,23 @@ import java.util.Map;
  * @author bennidi
  *         Date: 2/25/14
  */
-public class TimeBasedAggregator<V extends Number> implements IDataSink<V>{
+public class TimeBasedAggregator<V extends Number>{
 
     private Map<Long, DataCollector<V>> aggregated = new HashMap<Long, DataCollector<V>>();
 
     public void receive(DataPoint<V> datapoint) {
         DataCollector<V> collector;
-        synchronized (this){
             collector = aggregated.get(datapoint.getTsCreated());
             if(collector == null){
                 collector = new DataCollector<V>("" + datapoint.getTsCreated());
                 aggregated.put(datapoint.getTsCreated(), collector);
-            }}
+            }
         collector.receive(datapoint);
     }
 
-    public void append(V value) {
-        receive(new DataPoint<V>(value));
+    public void consume(IDataCollector<V> collector){
+        for(DataPoint<V> data : collector.getDatapoints())
+            receive(data);
     }
 
     /**
@@ -50,7 +50,10 @@ public class TimeBasedAggregator<V extends Number> implements IDataSink<V>{
     public <A> DataCollector<A> fold(IAggregate<V, A> aggregator){
         DataCollector<A> reduced = new DataCollector<A>(aggregator.toString());
         for(Map.Entry<Long, DataCollector<V>> entry: aggregated.entrySet()){
-            entry.getValue().feed(aggregator);
+            // feed aggregator
+            for(DataPoint<V> dataPoint : entry.getValue().getDatapoints())
+                aggregator.add(dataPoint);
+            // add aggregated value to folded collector
             reduced.receive(new DataPoint(entry.getKey(), aggregator.getValue()));
             aggregator.reset();
         }

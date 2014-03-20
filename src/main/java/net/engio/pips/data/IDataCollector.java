@@ -9,7 +9,7 @@ import java.util.Set;
  * @author bennidi
  *         Date: 2/25/14
  */
-public interface IDataCollector<IN> extends IDataSink<IN> {
+public interface IDataCollector<IN> extends IDataProcessor<IN,IN> {
 
     /**
      * Feed all collected data points to the consumer by calling the
@@ -17,7 +17,7 @@ public interface IDataCollector<IN> extends IDataSink<IN> {
      *
      * @param consumer
      */
-    void feed(IDataSink<IN> consumer);
+    void feed(IDataProcessor<IN,?> consumer);
 
     /**
      * The number of data points contained in this collector

@@ -2,7 +2,6 @@ package net.engio.pips.data.utils;
 
 import net.engio.pips.data.DataPoint;
 import net.engio.pips.data.DataProcessor;
-import net.engio.pips.data.IDataSink;
 
 /**
  * Map values from one type to another.
@@ -12,11 +11,10 @@ import net.engio.pips.data.IDataSink;
  */
 public abstract class ValueMapper<IN,OUT> extends DataProcessor<IN, OUT>{
 
+    protected abstract OUT map(IN in);
 
     @Override
-    protected void doReceive(IDataSink<OUT> sink, DataPoint<IN> datapoint) {
-        sink.receive(new DataPoint<OUT>(datapoint.getTsCreated(), map(datapoint.getValue())));
+    public void receive(DataPoint<IN> datapoint) {
+        emit(new DataPoint<OUT>(datapoint.getTsCreated(), map(datapoint.getValue())));
     }
-
-    protected abstract OUT map(IN in);
 }
