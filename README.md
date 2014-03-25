@@ -5,19 +5,23 @@ Simplistic library to build type-safe data pipelines for processing streams of d
 having input and output channels can be connected to form data processing networks. Encapsulating specific
 processing logic in single data processors allows to reuse and recombine logic very easily.
 
-Basic existing components:
+In the related project [lab](http://github.com/bennidi/lab) there are some report generators that can transform collected data
+into line charts.
+
+<h2 name="Components">Existing Components</h2>
 
 + Data Collector: Store received data items in the order they were received to provide access to them later on
 + Sampler: Filter items based on frequency criteria (accept only one item per X milliseconds or every Xth item, others are dropped)
 + Value Mapper: Convert incoming data items into different ones
 + Aggregates: Calculate aggregates like SUM,AVG,MIN of a stream of numbers
-+ Sliding Aggregate: Calculate and propagate aggregated values for a sliding window. The width of the windows can be
++ Sliding Aggregate: Calculate and propagate aggregated values within a sliding window. The width of the windows can be
 defined in terms of time or number of items. Even more complex criteria can be implemented using `DataFilter`
 + Execution Timer: Measure execution times of code using `begin()` and `end()` of the timer
 + ItemCounter: Counts received data items
 + Synchronizer: Serialize access to connected data processors for use in multi-threaded context
 + Sensor: Periodically poll a given generator callback and pipe the retrieved value into a given `IDataProcessor`
 
+<h2 name="Samples">Samples</h2>
 
 Sample: Time the execution of arbitrary code
 
