@@ -20,7 +20,7 @@ defined in terms of time or number of items. Even more complex criteria can be i
 
 
 Sample: Time the execution of arbitrary code
-        ```
+
         DataCollector<Long> timings = new DataCollector("Execution times");
         ExecutionTimer timer = new ExecutionTimer(timings);
         for(int i = 0; i < 100 ; i ++){
@@ -29,7 +29,7 @@ Sample: Time the execution of arbitrary code
             Thread.sleep(1);
             timer.end();
         }
-
+        // should contain 100 execution timings
         assertEquals(100, timings.size());
         for(DataPoint<Long> timing: timings.getDatapoints()){
             assertTrue(timing.getValue() >= 1);
@@ -38,7 +38,7 @@ Sample: Time the execution of arbitrary code
 
 
 Sample: Generate random numbers which are emitted to a set of data processors with preceeding filters
-        ```
+
         DataPointProducer testProducer = new DataPointProducer();
         ItemCounter counter = new ItemCounter();
         DataCollector<Long> all = new DataCollector<Long>("all data points");
@@ -63,7 +63,7 @@ Sample: Generate random numbers which are emitted to a set of data processors wi
         assertEquals(everySecondDP.getDatapoints(), everySecondMs.getDatapoints()); // filters have done their work
         assertTrue(everySecondDP.getDatapoints().containsAll(every4thDP.getDatapoints()));
         assertTrue(everySecondMs.getDatapoints().containsAll(every4thMs.getDatapoints()));
-        ```
+
 
 
 
