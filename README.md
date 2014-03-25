@@ -10,7 +10,7 @@ mostly standard JDK classes. This might change in the future depending on user r
 many scenarios where data collection / processing is not the software's core functionality. Pips was initially created to support easy collection of runtime
 information for the macro benchmarking library [lab](http://github.com/bennidi/lab).
 
-See the [javadoc](http://bennidi.github.io/lab)
+See the [javadoc](http://bennidi.github.io/pips) for more details on the API
 
 <h2 name="Components">Existing Components</h2>
 
