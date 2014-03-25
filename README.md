@@ -2,11 +2,15 @@ pips
 ====
 
 Simplistic library to build type-safe data pipelines for processing streams of data items `DataPoint<V>`. Single units (`IDataProcessor<IN,OUT>`)
-having input and output channels can be connected to form data processing networks. Encapsulating specific
-processing logic in single data processors allows to reuse and recombine logic very easily.
+having input and output channels can be connected to form data processing networks where data points flow from one processor
+to the next. Encapsulating specific processing logic in single data processors allows to reuse and recombine logic very easily.
 
-In the related project [lab](http://github.com/bennidi/lab) there are some report generators that can transform collected data
-into line charts.
+Pips aims at ease of use of its components and is not (yet) optimized for high performance / data volumes. The underlying data structures are
+mostly standard JDK classes. This might change in the future depending on user requirements. Performance should still be quite sufficient for
+many scenarios where data collection / processing is not the software's core functionality. Pips was initially created to support easy collection of runtime
+information for the macro benchmarking library [lab](http://github.com/bennidi/lab).
+
+See the [javadoc](http://bennidi.github.io/lab)
 
 <h2 name="Components">Existing Components</h2>
 
