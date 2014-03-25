@@ -28,7 +28,7 @@ public class SlidingAggregator<IN, OUT> extends DataProcessor<IN, OUT>{
 
     @Override
     public void receive(DataPoint<IN> datapoint) {
-        aggregator.add(datapoint);
+        aggregator.receive(datapoint);
         if(IDataFilter.accepts(datapoint)){
             // if {range} number of datapoints have been collected
            emit(new DataPoint<OUT>(datapoint.getTsCreated(), aggregator.getValue()));

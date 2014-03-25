@@ -1,6 +1,6 @@
 package net.engio.pips.data;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * A data collector will store the received data points (persistently or in-memory) to provide
@@ -44,5 +44,11 @@ public interface IDataCollector<IN> extends IDataProcessor<IN,IN> {
      * Retrieve an immutable set of all received data points
      * @return
      */
-    Set<DataPoint<IN>> getDatapoints();
+    List<DataPoint<IN>> getDatapoints();
+
+    /**
+     * Get all received values
+     * @return
+     */
+    Object[] getValues();
 }

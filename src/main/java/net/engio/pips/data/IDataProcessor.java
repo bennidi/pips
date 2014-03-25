@@ -27,7 +27,16 @@ public interface IDataProcessor<IN, OUT> {
      *           of data processors in a type-safe manner
      * @return  - The added data processor
      */
-    <V> IDataProcessor<OUT,V> pipeInto(IDataProcessor<OUT, V> destination);
+    <V> IDataProcessor<OUT,V> connectTo(IDataProcessor<OUT, V> destination);
+
+    /**
+     * Connect multiple other data processor to this data processor. The newly connected processor
+     * will be added to the list of receivers and fed with outgoing data points from this processor.
+     *
+     * @param destination - The data processors to be added to the list of receivers
+     * @return  - This data processor
+     */
+    IDataProcessor<IN, OUT> connectTo(IDataProcessor<OUT, ?>... destination);
 
     /**
      * Connect another data processor to this data processor. The newly connected processor
@@ -62,6 +71,11 @@ public interface IDataProcessor<IN, OUT> {
         }
 
         @Override
+        public IDataProcessor connectTo(IDataProcessor... destination) {
+            return this;
+        }
+
+        @Override
         public void receive(DataPoint datapoint) {
             // do nothing
         }
@@ -72,7 +86,7 @@ public interface IDataProcessor<IN, OUT> {
         }
 
         @Override
-        public IDataProcessor pipeInto(IDataProcessor processor) {
+        public IDataProcessor connectTo(IDataProcessor processor) {
             return this;
         }
 

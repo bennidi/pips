@@ -17,9 +17,16 @@ public abstract class DataProcessor<IN, OUT> implements IDataProcessor<IN, OUT> 
     }
 
     @Override
-    public <V> IDataProcessor<OUT, V> pipeInto(final IDataProcessor<OUT, V> consumer){
+    public <V> IDataProcessor<OUT, V> connectTo(final IDataProcessor<OUT, V> consumer){
        receivers.add(consumer);
         return consumer;
+    }
+
+    @Override
+    public IDataProcessor<IN,OUT> connectTo(final IDataProcessor<OUT, ?>... consumer){
+        for(IDataProcessor proc : consumer)
+            connectTo(proc);
+        return this;
     }
 
     @Override
@@ -36,16 +43,6 @@ public abstract class DataProcessor<IN, OUT> implements IDataProcessor<IN, OUT> 
     protected List<IDataProcessor<OUT, ?>> getReceivers() {
         return receivers;
     }
-
-    /*
-    @Override
-    public void receive(DataPoint<IN> datapoint) {
-        for(IDataProcessor sink : receivers)
-            doReceive(sink, datapoint);
-    }
-
-    protected abstract void doReceive(IDataProcessor<OUT,?> receiver, DataPoint<IN> datapoint);
-    */
 
     @Override
     public void receive(IN value) {

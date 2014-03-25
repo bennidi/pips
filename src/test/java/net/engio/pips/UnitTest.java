@@ -75,6 +75,14 @@ public abstract class UnitTest {
         }
     }
 
+    protected void assertArrayEquals(Object[] expected, Object[] actual){
+        assertEquals(expected.length, actual.length);
+        for(int i = 0 ; i < expected.length ; i++){
+            assertEquals(expected[i], actual[i]);
+        }
+    }
+
+
     protected void pause(){
          pause(10);
     }

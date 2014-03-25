@@ -3,8 +3,8 @@ package net.engio.pips.data.filter;
 import net.engio.pips.data.DataPoint;
 
 /**
- * A filter is used to control which data points may pass from a {@link net.engio.pips.data.IDataSource} to a
- * {@link net.engio.pips.data.IDataSink}
+ * A filter is used to control which data points may pass from one {@link net.engio.pips.data.IDataProcessor} to
+ * another
  *
  *
  * @author bennidi
@@ -15,7 +15,7 @@ public interface IDataFilter<V> {
     /**
      * Calculate whether or not the given data point is accepted by this filter.
      * If a filter accepts the data point it will be routed along to the corresponding
-     * {@link net.engio.pips.data.IDataSink}.
+     * {@link net.engio.pips.data.IDataProcessor}.
      *
      * For an example use of filters see {@link Sampler} and corresponding filter implementations
      *
@@ -45,8 +45,8 @@ public interface IDataFilter<V> {
 
         @Override
         public boolean accepts(DataPoint<V> vDataPoint) {
-            if (System.currentTimeMillis() - intervalInMs >= lastSample) {
-                lastSample = System.currentTimeMillis();
+            if (vDataPoint.getTsCreated() - intervalInMs >= lastSample) {
+                lastSample = vDataPoint.getTsCreated();
                 return true;
             } else return false;
         }
@@ -61,23 +61,26 @@ public interface IDataFilter<V> {
      */
     class ItemCountBased<V> implements IDataFilter<V> {
 
-        private int range;
+        private int skip;
 
-        private int numberOfItems = 0;
+        private int skipped = 0;
 
-        public ItemCountBased(int range) {
-            if(range < 2)
-                throw new IllegalArgumentException("Range must be greater than 2, for this filter to make sense");
-            this.range = range;
+        public ItemCountBased(int skip) {
+            if(skip < 1)
+                throw new IllegalArgumentException("Skip at least one data point");
+            this.skip = skip;
+            this.skipped = skip; // accept the first data point
         }
 
         @Override
         public boolean accepts(DataPoint<V> vDataPoint) {
-            numberOfItems++;
-            if (range - numberOfItems == 0) {
-                numberOfItems = 0;
+            if (skip == skipped) {
+                skipped = 0;
                 return true;
-            } else return false;
+            } else{
+                skipped++;
+                return false;
+            }
         }
     }
 }

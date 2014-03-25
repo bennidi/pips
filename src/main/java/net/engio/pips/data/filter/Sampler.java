@@ -28,4 +28,8 @@ public class Sampler<V> extends DataProcessor<V,V> {
     public static <V> Sampler<V> timeBased(long interval){
         return new Sampler<V>(new IDataFilter.TimeBased<V>(interval));
     }
+
+    public static <V> Sampler<V> skip(int skip){
+        return new Sampler<V>(new IDataFilter.ItemCountBased<V>(skip));
+    }
 }

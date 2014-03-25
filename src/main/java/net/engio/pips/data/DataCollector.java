@@ -1,9 +1,8 @@
 package net.engio.pips.data;
 
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author bennidi
@@ -11,12 +10,7 @@ import java.util.TreeSet;
  */
 public class DataCollector<IN> extends DataProcessor<IN, IN> implements IDataCollector<IN> {
 
-    private Set<DataPoint<IN>> datapoints = new TreeSet<DataPoint<IN>>(new Comparator<DataPoint<IN>>() {
-        @Override
-        public int compare(DataPoint<IN> inDataPoint, DataPoint<IN> inDataPoint2) {
-            return (int)(inDataPoint.getTsCreated() - inDataPoint2.getTsCreated());
-        }
-    });
+    private List<DataPoint<IN>> datapoints = new LinkedList<DataPoint<IN>>();
 
     private String id;
 
@@ -55,7 +49,17 @@ public class DataCollector<IN> extends DataProcessor<IN, IN> implements IDataCol
     }
 
     @Override
-    public Set<DataPoint<IN>> getDatapoints() {
-        return Collections.unmodifiableSet(datapoints);
+    public List<DataPoint<IN>> getDatapoints() {
+        return Collections.unmodifiableList(datapoints);
     }
+
+    @Override
+    public Object[] getValues() {
+        Object[] values = new Object[datapoints.size()];
+        int index = 0;
+        for(DataPoint<IN> dp : datapoints)
+            values [index++] = dp.getValue();
+        return values;
+    }
+
 }

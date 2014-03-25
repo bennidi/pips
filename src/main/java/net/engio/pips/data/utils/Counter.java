@@ -25,7 +25,7 @@ public class Counter extends DataProcessor<Long, Long> {
 
     public Counter(long initialValue, IDataProcessor<Long, Long> delegate) {
         current = new AtomicLong(initialValue);
-        pipeInto(delegate);
+        connectTo(delegate);
     }
 
     @Override

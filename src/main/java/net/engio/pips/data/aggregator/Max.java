@@ -1,20 +1,15 @@
 package net.engio.pips.data.aggregator;
 
 import net.engio.pips.data.DataPoint;
+import net.engio.pips.data.DataProcessor;
 
 /**
  * @author bennidi
  *         Date: 2/25/14
  */
-public class Max<N extends Number> implements IAggregate<N, Double> {
+public class Max<N extends Number> extends DataProcessor<N, Double> implements IAggregate<N, Double> {
 
-    private double max=Double.MIN_VALUE;
-
-    @Override
-    public void add(DataPoint<N> datapoint) {
-        if(datapoint.getValue().doubleValue() > max)
-            max = datapoint.getValue().doubleValue();
-    }
+    private Double max = null;
 
     @Override
     public void reset() {
@@ -24,5 +19,12 @@ public class Max<N extends Number> implements IAggregate<N, Double> {
     @Override
     public Double getValue() {
         return max;
+    }
+
+    @Override
+    public void receive(DataPoint<N> datapoint) {
+        if(max == null || datapoint.getValue().doubleValue() >= max)
+            max = datapoint.getValue().doubleValue();
+        emit(new DataPoint<Double>(datapoint.getTsCreated(), max));
     }
 }

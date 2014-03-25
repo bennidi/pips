@@ -52,7 +52,7 @@ public class TimeBasedAggregator<V extends Number>{
         for(Map.Entry<Long, DataCollector<V>> entry: aggregated.entrySet()){
             // feed aggregator
             for(DataPoint<V> dataPoint : entry.getValue().getDatapoints())
-                aggregator.add(dataPoint);
+                aggregator.receive(dataPoint);
             // add aggregated value to folded collector
             reduced.receive(new DataPoint(entry.getKey(), aggregator.getValue()));
             aggregator.reset();

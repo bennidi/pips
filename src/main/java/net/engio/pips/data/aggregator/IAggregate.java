@@ -1,6 +1,6 @@
 package net.engio.pips.data.aggregator;
 
-import net.engio.pips.data.DataPoint;
+import net.engio.pips.data.IDataProcessor;
 
 /**
  * Reduce a set of data points to a single value, e.g. compute AVG, MIN, MAX
@@ -8,7 +8,7 @@ import net.engio.pips.data.DataPoint;
  * @author bennidi
  *         Date: 2/25/14
  */
-public interface IAggregate<IN, OUT>{
+public interface IAggregate<IN, OUT> extends IDataProcessor<IN,OUT>{
 
     /**
      * Reset this aggregate. Resetting will evict all formerly received values
@@ -21,6 +21,4 @@ public interface IAggregate<IN, OUT>{
      * @return
      */
     OUT getValue();
-
-    void add(DataPoint<IN> value);
 }
