@@ -40,7 +40,6 @@ public interface IDataFilter<V> {
 
         public TimeBased(long intervalInMs) {
             this.intervalInMs = intervalInMs;
-            lastSample = System.currentTimeMillis() - intervalInMs; // accept new data point immediately
         }
 
         @Override

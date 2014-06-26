@@ -6,6 +6,7 @@ import net.engio.pips.data.IDataCollector;
 import net.engio.pips.data.aggregator.IAggregate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,9 +33,22 @@ public class TimeBasedAggregator<V extends Number>{
         collector.receive(datapoint);
     }
 
-    public void consume(IDataCollector<V> collector){
+    public TimeBasedAggregator<V> consume(IDataCollector<V> collector){
         for(DataPoint<V> data : collector.getDatapoints())
             receive(data);
+        return this;
+    }
+
+    public TimeBasedAggregator<V>  consume(IDataCollector<V> ...collectors){
+        for(IDataCollector<V> collector : collectors)
+            consume(collector);
+        return this;
+    }
+
+    public TimeBasedAggregator<V>  consume(List<IDataCollector<V>> collectors){
+        for(IDataCollector<V> collector : collectors)
+            consume(collector);
+        return this;
     }
 
     /**
@@ -47,16 +61,19 @@ public class TimeBasedAggregator<V extends Number>{
      * @param <A>
      * @return
      */
-    public <A> DataCollector<A> fold(IAggregate<V, A> aggregator){
-        DataCollector<A> reduced = new DataCollector<A>(aggregator.toString());
+    public <A> IDataCollector<A> fold(IAggregate<V, A> aggregator, IDataCollector<A> target){
         for(Map.Entry<Long, DataCollector<V>> entry: aggregated.entrySet()){
             // feed aggregator
             for(DataPoint<V> dataPoint : entry.getValue().getDatapoints())
                 aggregator.receive(dataPoint);
             // add aggregated value to folded collector
-            reduced.receive(new DataPoint(entry.getKey(), aggregator.getValue()));
+            target.receive(new DataPoint(entry.getKey(), aggregator.getValue()));
             aggregator.reset();
         }
-        return reduced;
+        return target;
+    }
+
+    public <A> IDataCollector<A> fold(IAggregate<V, A> aggregator){
+          return  fold(aggregator, new DataCollector<A>(aggregator.toString()));
     }
 }

@@ -13,7 +13,7 @@ public class DataCollectorManager {
 
     private Map<String, CollectorGroup> collectorsByGroup = new HashMap<String, CollectorGroup>();
 
-    public Set<IDataCollector> getCollectors(String groupId){
+    public Set<IDataCollector> getCollectorSet(String groupId){
         Set<IDataCollector> collectors = new TreeSet<IDataCollector>(new Comparator<IDataCollector>() {
             @Override
             public int compare(IDataCollector iDataCollector, IDataCollector iDataCollector2) {
@@ -26,14 +26,36 @@ public class DataCollectorManager {
         return collectors;
     }
 
-    public synchronized DataCollectorManager addCollector(IDataCollector collector){
+    public List<IDataCollector> getCollectors(String groupId, int samples){
+        List<IDataCollector> collectors = new LinkedList<IDataCollector>();
+        for(Map.Entry<String, CollectorGroup> entry : collectorsByGroup.entrySet()){
+            if(entry.getKey().startsWith(groupId) || groupId.isEmpty())
+                collectors.addAll(entry.getValue().collectors);
+        }
+        if(samples > 0){
+            List<IDataCollector> reduced = new ArrayList<IDataCollector>();
+           int total=0, modulo= collectors.size() / samples;
+           for(IDataCollector collector : collectors){
+               total++;
+               if(total % modulo == 0)reduced.add(collector);
+           }
+            collectors = reduced;
+        }
+        return collectors;
+    }
+
+    public List<IDataCollector> getCollectors(String groupId){
+        return getCollectors(groupId, -1); // get all
+    }
+
+    public synchronized <V> IDataCollector<V> addCollector(IDataCollector<V> collector){
         addToGroup(collector.getId(), collector);
         /*
         String[] groups = getGroups(collector);
         for(String groupId : groups){
 
         } */
-        return this;
+        return collector;
     }
 
     private void addToGroup(String groupId, IDataCollector collector){
@@ -65,12 +87,7 @@ public class DataCollectorManager {
 
         private String groupId;
 
-        private Set<IDataCollector> collectors = new TreeSet<IDataCollector>(new Comparator<IDataCollector>() {
-            @Override
-            public int compare(IDataCollector iDataCollector, IDataCollector iDataCollector2) {
-                return iDataCollector.getId().compareTo(iDataCollector2.getId());
-            }
-        });
+        private List<IDataCollector> collectors = new LinkedList<IDataCollector>();
 
         public CollectorGroup(String groupId, IDataCollector ...collectors) {
             this.groupId = groupId;
@@ -91,7 +108,7 @@ public class DataCollectorManager {
             return groupId;
         }
 
-        public Set<IDataCollector> getCollectors() {
+        public List<IDataCollector> getCollectors() {
             return collectors;
         }
 

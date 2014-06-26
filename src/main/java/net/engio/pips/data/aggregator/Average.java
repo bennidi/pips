@@ -13,6 +13,15 @@ public class Average<N extends Number> extends DataProcessor<N, Double> implemen
 
     private int count=0;
 
+    private String name;
+
+    public Average(String name) {
+        this.name = name;
+    }
+
+    public Average() {
+    }
+
     @Override
     public void reset() {
         total = 0;
@@ -30,5 +39,10 @@ public class Average<N extends Number> extends DataProcessor<N, Double> implemen
         count++;
         total += datapoint.getValue().doubleValue();
         emit(new DataPoint<Double>(datapoint.getTsCreated(), total/count));
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
